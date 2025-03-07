@@ -122,6 +122,13 @@ void toggleDevice() {
   log("Device toggled: ", deviceStatus ? "ON" : "OFF");
 }
 
+// Function to add CORS headers to all responses
+void addCorsHeaders() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
 void setup() {
   Serial.begin(115200);
   // while (!Serial) { delay(10); }
@@ -145,6 +152,17 @@ void setup() {
 
   // Define server routes
 
+  // Handle preflight OPTIONS requests for CORS
+  server.on("/", HTTP_OPTIONS, [](){
+    addCorsHeaders();
+    server.send(204); // No content response for OPTIONS
+  });
+
+  server.on("/config", HTTP_OPTIONS, [](){
+    addCorsHeaders();
+    server.send(204); // No content response for OPTIONS
+  });
+
   // Root endpoint for device status
   server.on("/", HTTP_GET, [](){
     DynamicJsonDocument doc(1024);
@@ -158,6 +176,7 @@ void setup() {
 
     String response;
     serializeJson(doc, response);
+    addCorsHeaders();
     server.send(200, "application/json", response);
   });
 
@@ -178,6 +197,7 @@ void setup() {
 
     String response;
     serializeJson(doc, response);
+    addCorsHeaders();
     server.send(200, "application/json", response);
   });
 
@@ -195,6 +215,7 @@ void setup() {
     serializeJson(doc, response);
 
     // Send the response
+    addCorsHeaders();
     server.send(200, "application/json", response);
   });
 
@@ -208,6 +229,7 @@ void setup() {
 
       if (error) {
         log("JSON parsing failed: ", error.c_str());
+        addCorsHeaders();
         server.send(400, "application/json", "{\"success\":false,\"error\":\"Invalid JSON\"}");
         return;
       }
@@ -215,6 +237,7 @@ void setup() {
       // Verify JSON is an object
       if (!doc.is<JsonObject>()) {
         log("JSON is not an object");
+        addCorsHeaders();
         server.send(400, "application/json", "{\"success\":false,\"error\":\"JSON must be an object\"}");
         return;
       }
@@ -224,6 +247,7 @@ void setup() {
       // Check if JSON is empty
       if (obj.size() == 0) {
         log("JSON is empty");
+        addCorsHeaders();
         server.send(400, "application/json", "{\"success\":false,\"error\":\"No color channels provided\"}");
         return;
       }
@@ -238,6 +262,7 @@ void setup() {
           // Verify value is an integer
           if (!obj[channel].is<int>()) {
             log("Invalid value for ", channel, " - must be an integer");
+            addCorsHeaders();
             server.send(400, "application/json", 
               "{\"success\":false,\"error\":\"Values must be integers between 0-255\"}");
             return;
@@ -249,6 +274,7 @@ void setup() {
           // Validate range
           if (value < 0 || value > 255) {
             log("Invalid value for ", channel, " - out of range (0-255)");
+            addCorsHeaders();
             server.send(400, "application/json", 
               "{\"success\":false,\"error\":\"Values must be integers between 0-255\"}");
             return;
@@ -266,14 +292,17 @@ void setup() {
       // Check if any valid channels were found
       if (!hasValidChannel) {
         log("No valid color channels found");
+        addCorsHeaders();
         server.send(400, "application/json", 
           "{\"success\":false,\"error\":\"No valid color channels provided\"}");
         return;
       }
 
       // All validations passed
+      addCorsHeaders();
       server.send(200, "application/json", "{\"success\":true}");
     } else {
+      addCorsHeaders();
       server.send(400, "application/json", "{\"success\":false,\"error\":\"No body provided\"}");
     }
   });
