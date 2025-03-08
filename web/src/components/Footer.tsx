@@ -3,8 +3,6 @@ import { Github, Youtube, Instagram } from 'lucide-react';
 export default function Footer() {
   return (
     <footer className="w-full flex flex-col items-center mt-6 pb-4">
-      <div className="text-gray-500 text-xs mb-2">RSHN ⚡ CTRL</div>
-
       <div className="flex items-center space-x-4">
         <a 
           href="https://github.com/debloper/rshn" 

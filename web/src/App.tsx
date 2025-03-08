@@ -126,7 +126,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1f35] to-[#2d3748]
                     text-white flex flex-col items-center justify-center p-6 touch-manipulation">
       <div className="text-4xl font-bold mb-8 flex items-center gap-3">
         <span>RSHN</span>
@@ -151,7 +151,7 @@ function App() {
           <button
             onClick={handleRetry}
             className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded w-full 
-                      transition-colors flex items-center justify-center gap-2"
+                      transition-colors flex items-center justify-center gap-2 shadow"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -161,7 +161,7 @@ function App() {
         </div>
       )}
 
-      <div className="rounded-xl p-6 bg-slate-900/50 backdrop-blur-sm w-full max-w-md space-y-4 shadow-xl border border-slate-800">
+      <div className="rounded-xl p-6 bg-slate-900/70 backdrop-blur-sm w-full max-w-md space-y-4 shadow-xl border border-slate-800">
         <ColorChannel 
           name="red" 
           label="Red" 
